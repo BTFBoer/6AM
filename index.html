@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Persona Sheets: Underground Cooldown Room</title>
+  <style>
+    :root {
+      --bg: #0a0a0c;
+      --card: #111114;
+      --border: #2a2a30;
+      --text: #e2e2e6;
+      --muted: #8a8a94;
+      --accent: #6b5cff;
+      --accent-hover: #8475ff;
+      --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --success: #22c55e;
+      --danger: #ef4444;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-main);
+      line-height: 1.6;
+      padding: 2rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 2.5rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1.5rem;
+    }
+
+    .persona-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      position: relative;
+      transition: border-color 0.2s;
+    }
+
+    .persona-card:hover { border-color: var(--accent); }
+
+    .persona-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .persona-name {
+      font-size: 1.35rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .copy-btn {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .copy-btn:hover { background: var(--accent-hover); }
+    .copy-btn:active { transform: scale(0.97); }
+    .copy-btn.copied { background: var(--success); }
+    .copy-btn.failed { background: var(--danger); }
+
+    .persona-content {
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      white-space: pre-wrap;
+      color: var(--text);
+      background: #0d0d10;
+      padding: 1.25rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      max-height: 600px;
+      overflow-y: auto;
+      line-height: 1.55;
+    }
+
+    .persona-content::-webkit-scrollbar { width: 6px; }
+    .persona-content::-webkit-scrollbar-track { background: transparent; }
+    .persona-content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+    .tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      background: #1a1a20;
+      color: var(--muted);
+      margin-right: 0.4rem;
+      margin-bottom: 0.4rem;
+      border: 1px solid var(--border);
+    }
+
+    .footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.8rem;
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    @media (max-width: 600px) {
+      body { padding: 1rem; }
+      .persona-header { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <h1>AI Persona Sheets: Underground Cooldown Room</h1>
+  <p class="subtitle">Ready-to-copy character profiles optimized for AI roleplay. Click "Copy Persona" to paste directly into your AI character creator.</p>
+
+  <div id="personas-container"></div>
+
+  <p class="footer">All personas are fictionalized creative adaptations based on publicly available information and psychologically plausible inferences. Designed for mature, narrative-driven AI roleplay.</p>
+
+  <script>
+    const personas = [
+      {
+        name: "Weronika Spyrka",
+        tags: ["Model", "Influencer", "Polish"],
+        text: `**Overview**\nA polished Polish model and digital creator whose public image balances high-fashion elegance with a quietly introspective, off-camera depth.\n\n**Scenario**\nIt's 6 in the morning at an underground techno-club in Amsterdam.`
+      },
+      {
+        name: "Nina Kraviz",
+        tags: ["Techno DJ", "Producer", "Russian"],
+        text: `**Overview**\nA globally renowned Russian techno DJ and producer whose public image blends raw, uncompromising musical intensity with an intellectual approach to nightlife.\n\n**Scenario**\nIt's 6 in the morning at an underground techno-club in Amsterdam.`
+      },
+      {
+        name: "Aryna Sabalenka",
+        tags: ["Tennis Player", "Athlete", "Belarusian"],
+        text: `**Overview**\nA powerhouse Belarusian tennis champion known for explosive athleticism and fierce competitiveness.\n\n**Scenario**\nIt's 6 in the morning at an underground techno-club in Amsterdam.`
+      }
+    ];
+
+    const container = document.getElementById('personas-container');
+
+    async function copyText(text) {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+        return;
+      }
+
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.setAttribute('readonly', '');
+      textarea.style.position = 'absolute';
+      textarea.style.left = '-9999px';
+      document.body.appendChild(textarea);
+      textarea.select();
+      const successful = document.execCommand('copy');
+      document.body.removeChild(textarea);
+
+      if (!successful) {
+        throw new Error('Copy command failed');
+      }
+    }
+
+    function buttonFeedback(btn, stateText, className) {
+      btn.textContent = stateText;
+      btn.classList.remove('copied', 'failed');
+      if (className) btn.classList.add(className);
+      setTimeout(() => {
+        btn.textContent = 'Copy Persona';
+        btn.classList.remove('copied', 'failed');
+      }, 2000);
+    }
+
+    personas.forEach((p) => {
+      const card = document.createElement('div');
+      card.className = 'persona-card';
+
+      const header = document.createElement('div');
+      header.className = 'persona-header';
+
+      const nameEl = document.createElement('div');
+      nameEl.className = 'persona-name';
+      nameEl.textContent = p.name;
+
+      const tagsEl = document.createElement('div');
+      p.tags.forEach((t) => {
+        const tag = document.createElement('span');
+        tag.className = 'tag';
+        tag.textContent = t;
+        tagsEl.appendChild(tag);
+      });
+
+      const leftGroup = document.createElement('div');
+      leftGroup.appendChild(nameEl);
+      leftGroup.appendChild(tagsEl);
+
+      const btn = document.createElement('button');
+      btn.className = 'copy-btn';
+      btn.textContent = 'Copy Persona';
+      btn.addEventListener('click', async () => {
+        try {
+          await copyText(p.text);
+          buttonFeedback(btn, 'Copied!', 'copied');
+        } catch (error) {
+          console.error(error);
+          buttonFeedback(btn, 'Copy failed', 'failed');
+        }
+      });
+
+      header.appendChild(leftGroup);
+      header.appendChild(btn);
+
+      const content = document.createElement('div');
+      content.className = 'persona-content';
+      content.textContent = p.text;
+
+      card.appendChild(header);
+      card.appendChild(content);
+      container.appendChild(card);
+    });
+  </script>
+</body>
+</html>
